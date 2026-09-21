@@ -1,0 +1,6 @@
+{
+  "name": "MarkeTop",
+  "description": "Analytics-powered marketing strategies and SEO growth engine that convert visitors to revenue.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

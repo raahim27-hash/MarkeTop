@@ -61,13 +61,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAudit }) => {
       id="main-header"
       className={`fixed top-0 left-0 w-full z-[1000] transition-all duration-300 ${
         scrolled
-          ? 'bg-[#1A1A1A]/90 shadow-[0_4px_30px_rgba(0,0,0,0.8)] border-b border-[#00D4FF]/20'
-          : 'bg-[#1A1A1A]/80 border-b border-[#00D4FF]/10'
+          ? 'bg-[#0A0E1A]/90 shadow-[0_4px_30px_rgba(0,0,0,0.85)] border-b border-[#00D4FF]/20 backdrop-blur-xl'
+          : 'bg-transparent border-b border-white/5 backdrop-blur-sm'
       }`}
       style={{
-        padding: '1.5rem 5%',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
+        padding: '1.25rem 5%',
       }}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">

@@ -129,21 +129,31 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
         className="absolute inset-0 pointer-events-none z-0 opacity-80"
       />
 
-      {/* Futuristic ambient neon radial glow orbs */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#00D4FF]/10 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-10 right-10 w-[450px] h-[450px] bg-[#FF6B9D]/10 rounded-full blur-[130px] pointer-events-none" />
+      {/* Futuristic ambient neon radial glow orbs with cinematic opening fade */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.6, ease: 'easeOut' }}
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#00D4FF]/10 rounded-full blur-[140px] pointer-events-none"
+      />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.8, delay: 0.2, ease: 'easeOut' }}
+        className="absolute bottom-10 right-10 w-[450px] h-[450px] bg-[#FF6B9D]/10 rounded-full blur-[130px] pointer-events-none"
+      />
 
-      {/* Floating Animated Data Telemetry Chips (Data Points throughout Hero) that breathe on hover */}
+      {/* Floating Animated Data Telemetry Chips - Arriving smoothly after movie opening */}
       <motion.div
         id="telemetry-badge-traffic"
-        initial={{ opacity: 0, x: -30 }}
-        animate={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, x: -40, filter: 'blur(8px)' }}
+        animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
         whileHover={{
           scale: 1.04,
           boxShadow: '0 0 30px rgba(0,212,255,0.45), 0 10px 25px rgba(0,0,0,0.5)',
           transition: { duration: 0.3, ease: 'easeOut' },
         }}
-        transition={{ duration: 0.8, delay: 0.3 }}
+        transition={{ duration: 1.0, delay: 1.85, ease: [0.16, 1, 0.3, 1] }}
         className="hidden lg:flex absolute left-8 xl:left-20 top-1/3 items-center gap-3 p-3.5 rounded-2xl bg-[#1A1A2E]/75 backdrop-blur-md border border-[#00D4FF]/30 shadow-[0_0_20px_rgba(0,212,255,0.25)] z-10 cursor-pointer"
       >
         <div className="w-10 h-10 rounded-xl bg-[#00D4FF]/15 flex items-center justify-center text-[#00D4FF] border border-[#00D4FF]/40">
@@ -162,14 +172,14 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
 
       <motion.div
         id="telemetry-badge-keywords"
-        initial={{ opacity: 0, x: 30 }}
-        animate={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, x: 40, filter: 'blur(8px)' }}
+        animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
         whileHover={{
           scale: 1.04,
           boxShadow: '0 0 30px rgba(255,107,157,0.4), 0 10px 25px rgba(0,0,0,0.5)',
           transition: { duration: 0.3, ease: 'easeOut' },
         }}
-        transition={{ duration: 0.8, delay: 0.5 }}
+        transition={{ duration: 1.0, delay: 2.1, ease: [0.16, 1, 0.3, 1] }}
         className="hidden lg:flex absolute right-8 xl:right-20 top-1/4 items-center gap-3 p-3.5 rounded-2xl bg-[#1A1A2E]/75 backdrop-blur-md border border-[#FF6B9D]/30 shadow-[0_0_20px_rgba(255,107,157,0.2)] z-10 cursor-pointer"
       >
         <div className="w-10 h-10 rounded-xl bg-[#FF6B9D]/15 flex items-center justify-center text-[#FF6B9D] border border-[#FF6B9D]/40">
@@ -188,14 +198,14 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
 
       <motion.div
         id="telemetry-badge-datapulse"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 35, filter: 'blur(8px)' }}
+        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
         whileHover={{
           scale: 1.04,
           boxShadow: '0 0 25px rgba(0,212,255,0.5)',
           transition: { duration: 0.3, ease: 'easeOut' },
         }}
-        transition={{ duration: 0.8, delay: 0.7 }}
+        transition={{ duration: 1.0, delay: 2.3, ease: [0.16, 1, 0.3, 1] }}
         className="hidden md:flex absolute bottom-12 left-12 lg:left-24 items-center gap-3 px-4 py-2.5 rounded-full bg-[#16213E]/80 backdrop-blur-md border border-[#00D4FF]/40 shadow-[0_0_15px_rgba(0,212,255,0.3)] z-10 text-xs cursor-pointer"
       >
         <span className="relative flex h-2.5 w-2.5">
@@ -210,23 +220,23 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
 
       {/* Main Center Content (max-width: 800px) */}
       <div className="relative z-10 w-full max-w-[800px] mx-auto px-6 text-center flex flex-col items-center">
-        {/* Subtle Cyber Tag */}
+        {/* Subtle Cyber Tag - Movie Opening Prologue */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, y: -20, filter: 'blur(6px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          transition={{ duration: 0.85, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#1A1A2E]/90 border border-[#00D4FF]/40 text-[#00D4FF] text-xs font-semibold uppercase tracking-widest mb-6 shadow-[0_0_15px_rgba(0,212,255,0.25)]"
         >
           <Activity className="w-3.5 h-3.5 animate-pulse text-[#00D4FF]" />
           <span>Next-Gen SEO & Digital Intelligence</span>
         </motion.div>
 
-        {/* H1: Your SEO Growth Engine (Montserrat Black 56px, white, text-shadow: 0 0 30px rgba(255, 255, 255, 0.5)) */}
+        {/* H1: Your SEO Growth Engine - Sweeps up gracefully like a movie opening title */}
         <motion.h1
           id="hero-title"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.15 }}
+          initial={{ opacity: 0, y: 55, filter: 'blur(12px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          transition={{ duration: 1.25, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
           className="font-black text-[38px] sm:text-[46px] md:text-[56px] text-white leading-[1.12] tracking-tight mb-6"
           style={{
             fontWeight: 900,
@@ -236,22 +246,22 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
           Your SEO Growth Engine
         </motion.h1>
 
-        {/* Subtitle: Analytics-powered marketing strategies that convert visitors to revenue (#B0B0B0, 24px) */}
+        {/* Subtitle: Follows elegantly like movie narration */}
         <motion.p
           id="hero-subtitle"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
+          initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          transition={{ duration: 1.15, delay: 1.05, ease: [0.16, 1, 0.3, 1] }}
           className="text-[#B0B0B0] text-[18px] sm:text-[21px] md:text-[24px] leading-relaxed max-w-[720px] mb-10 font-normal"
         >
           Analytics-powered marketing strategies that convert visitors to revenue
         </motion.p>
 
-        {/* CTA Button: Launch Analytics (swells invitingly with shadow lift on hover, presses down realistically and bounces back on click) */}
+        {/* CTA Button: Arrives last with purpose */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.45 }}
+          initial={{ opacity: 0, y: 35, scale: 0.9, filter: 'blur(6px)' }}
+          animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+          transition={{ duration: 0.95, delay: 1.55, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col sm:flex-row items-center gap-4"
         >
           <motion.button
@@ -286,9 +296,9 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
 
         {/* Mini Trust Metrics Bar underneath CTA */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.65 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 1.95, ease: [0.16, 1, 0.3, 1] }}
           className="mt-12 flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-xs text-[#B0B0B0]"
         >
           <div className="flex items-center gap-2">

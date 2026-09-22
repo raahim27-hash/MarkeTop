@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import React, { useState, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import { 
   BarChart3, 
   Trophy, 
@@ -16,11 +16,23 @@ import {
 
 export const About: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'chart' | 'console' | 'vitals'>('chart');
+  const aboutRef = useRef<HTMLElement | null>(null);
+
+  // Cinematic scene dissolve: About section softly fades as Features rise to meet it
+  const { scrollYProgress: aboutScroll } = useScroll({
+    target: aboutRef,
+    offset: ['start start', 'end start'],
+  });
+
+  const aboutContentOpacity = useTransform(aboutScroll, [0.3, 0.95], [1, 0.25]);
+  const aboutContentScale = useTransform(aboutScroll, [0.3, 0.95], [1, 0.96]);
+  const aboutContentY = useTransform(aboutScroll, [0.3, 0.95], [0, -35]);
 
   return (
     <section
+      ref={aboutRef}
       id="about"
-      className="relative w-full py-24 px-6 sm:px-8 lg:px-12 overflow-hidden"
+      className="relative w-full py-28 px-6 sm:px-8 lg:px-12 overflow-hidden"
       style={{
         background: 'linear-gradient(180deg, #1A1A2E 0%, #2D2D2D 50%, #1A1A2E 100%)',
       }}
@@ -29,7 +41,15 @@ export const About: React.FC = () => {
       <div className="absolute top-1/2 left-0 w-96 h-96 bg-[#00D4FF]/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-10 right-0 w-80 h-80 bg-[#FF6B9D]/10 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto">
+      {/* Cinematic Scene Dissolve Container */}
+      <motion.div
+        style={{
+          opacity: aboutContentOpacity,
+          scale: aboutContentScale,
+          y: aboutContentY,
+        }}
+        className="max-w-7xl mx-auto"
+      >
         {/* H2: Why MarkeTop? (Montserrat Black 40px #00D4FF, center) */}
         <div className="text-center mb-16">
           <motion.div
@@ -487,7 +507,11 @@ export const About: React.FC = () => {
             </motion.div>
           </div>
         </div>
-      </div>
+      </motion.div>
+
+      {/* Cinematic Continuous Scene Dissolve Barrier to Features */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#1A1A1A] to-transparent pointer-events-none" />
+      <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3/4 max-w-2xl h-[1px] bg-gradient-to-r from-transparent via-[#00D4FF]/40 to-transparent shadow-[0_0_15px_#00D4FF]" />
     </section>
   );
 };

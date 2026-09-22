@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import React, { useState, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import { 
   Rocket, 
   Calendar, 
@@ -19,6 +19,28 @@ interface CtaSectionProps {
 export const CtaSection: React.FC<CtaSectionProps> = ({ onStartAudit, onBookCall }) => {
   const [quickDomain, setQuickDomain] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const ctaRef = useRef<HTMLElement | null>(null);
+
+  // Cinematic section flow:
+  // 1. Emerges confidently from the right (as Features slide left)
+  // 2. Dims smoothly as Footer rises to close the story
+  const { scrollYProgress: ctaScroll } = useScroll({
+    target: ctaRef,
+    offset: ['start end', 'end start'],
+  });
+
+  const ctaSlideRight = useTransform(ctaScroll, [0, 0.32], [90, 0]);
+  const ctaExitY = useTransform(ctaScroll, [0.65, 0.98], [0, -35]);
+  const ctaOpacity = useTransform(
+    ctaScroll,
+    [0, 0.24, 0.65, 0.98],
+    [0.15, 1, 1, 0.22]
+  );
+  const ctaScale = useTransform(
+    ctaScroll,
+    [0, 0.32, 0.65, 0.98],
+    [0.96, 1, 1, 0.95]
+  );
 
   const handleSubmitQuickAudit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +57,7 @@ export const CtaSection: React.FC<CtaSectionProps> = ({ onStartAudit, onBookCall
 
   return (
     <section
+      ref={ctaRef}
       id="contact"
       className="relative w-full py-28 px-6 sm:px-8 lg:px-12 overflow-hidden"
       style={{
@@ -57,8 +80,16 @@ export const CtaSection: React.FC<CtaSectionProps> = ({ onStartAudit, onBookCall
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-[#00D4FF]/15 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-4 left-1/3 w-[500px] h-[250px] bg-[#FF6B9D]/12 rounded-full blur-[130px] pointer-events-none" />
 
-      {/* Center Max Width 700px */}
-      <div className="relative z-10 max-w-[700px] mx-auto text-center flex flex-col items-center">
+      {/* Center Max Width 700px: Emerges from the right, dims smoothly toward footer */}
+      <motion.div
+        style={{
+          x: ctaSlideRight,
+          y: ctaExitY,
+          opacity: ctaOpacity,
+          scale: ctaScale,
+        }}
+        className="relative z-10 max-w-[700px] mx-auto text-center flex flex-col items-center"
+      >
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -215,7 +246,11 @@ export const CtaSection: React.FC<CtaSectionProps> = ({ onStartAudit, onBookCall
             <span>Senior Search Strategist Review</span>
           </div>
         </div>
-      </div>
+      </motion.div>
+
+      {/* Cinematic Transition: CTA dims smoothly as Footer rises to close the story */}
+      <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-[#0C0C0C] to-transparent pointer-events-none" />
+      <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3/4 max-w-xl h-[1px] bg-gradient-to-r from-transparent via-[#00D4FF]/35 to-transparent shadow-[0_0_12px_#00D4FF]" />
     </section>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useScroll } from 'motion/react';
 import { Menu, X, Zap, ArrowRight, ShieldCheck } from 'lucide-react';
 import { NavItem } from '../types';
 
@@ -18,6 +18,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAudit }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+
+  // Track global camera scroll progress across the continuous narrative
+  const { scrollYProgress } = useScroll();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -226,6 +229,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAudit }) => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Continuous Cinematic Camera Progress Tracking Beam */}
+      <motion.div
+        style={{ scaleX: scrollYProgress, transformOrigin: '0%' }}
+        className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#00D4FF] via-[#FF6B9D] to-[#00D4FF] shadow-[0_0_12px_#00D4FF] pointer-events-none"
+      />
     </header>
   );
 };

@@ -1,17 +1,39 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import { Mail, Phone, MapPin } from 'lucide-react';
 
 export const Footer: React.FC = () => {
+  const footerRef = useRef<HTMLElement | null>(null);
+
+  // Cinematic story conclusion: Footer rises to close the story perfectly
+  const { scrollYProgress: footerScroll } = useScroll({
+    target: footerRef,
+    offset: ['start end', 'end end'],
+  });
+
+  const footerRiseY = useTransform(footerScroll, [0, 0.85], [60, 0]);
+  const footerRiseOpacity = useTransform(footerScroll, [0, 0.75], [0.35, 1]);
+  const footerRiseScale = useTransform(footerScroll, [0, 0.85], [0.97, 1]);
+
   return (
     <footer
+      ref={footerRef}
       id="main-footer"
-      className="relative w-full bg-[#0A0A0A] border-t border-[#00D4FF]/20 pt-16 pb-12 px-6 sm:px-8 lg:px-12 text-[#B0B0B0]"
+      className="relative w-full bg-[#0A0A0A] border-t border-[#00D4FF]/20 pt-16 pb-12 px-6 sm:px-8 lg:px-12 text-[#B0B0B0] overflow-hidden"
       style={{ backgroundColor: '#0A0A0A' }}
     >
       {/* Top subtle neon accent glow line */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 max-w-4xl h-[1px] bg-gradient-to-r from-transparent via-[#00D4FF] to-transparent shadow-[0_0_15px_#00D4FF]" />
 
-      <div className="max-w-7xl mx-auto">
+      {/* Cinematic Rise Container to close the story */}
+      <motion.div
+        style={{
+          y: footerRiseY,
+          opacity: footerRiseOpacity,
+          scale: footerRiseScale,
+        }}
+        className="max-w-7xl mx-auto"
+      >
         {/* Top row flex (space-between) */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 pb-12 border-b border-white/5">
           {/* Brand Logo in Footer with Confident Subtle Pulse of Recognition */}
@@ -170,7 +192,7 @@ export const Footer: React.FC = () => {
             2025 MarkeTop. Built for speed.
           </p>
         </div>
-      </div>
+      </motion.div>
     </footer>
   );
 };

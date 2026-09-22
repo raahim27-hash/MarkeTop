@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import { 
   LineChart, 
   Cpu, 
@@ -16,6 +16,29 @@ interface ServicesProps {
 }
 
 export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
+  const servicesRef = useRef<HTMLElement | null>(null);
+
+  // Cinematic section flow:
+  // 1. Enters: Rises to meet About as scenes dissolve into each other
+  // 2. Exits: Slides away gently left as CTA emerges from right
+  const { scrollYProgress: servicesScroll } = useScroll({
+    target: servicesRef,
+    offset: ['start end', 'end start'],
+  });
+
+  const featuresY = useTransform(servicesScroll, [0, 0.28], [80, 0]);
+  const featuresX = useTransform(servicesScroll, [0.65, 0.98], [0, -80]);
+  const featuresOpacity = useTransform(
+    servicesScroll,
+    [0, 0.22, 0.72, 0.98],
+    [0.15, 1, 1, 0.25]
+  );
+  const featuresScale = useTransform(
+    servicesScroll,
+    [0, 0.28, 0.7, 0.98],
+    [0.96, 1, 1, 0.97]
+  );
+
   const servicesList = [
     {
       id: 'service-seo-analytics',
@@ -60,6 +83,7 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
 
   return (
     <section
+      ref={servicesRef}
       id="services"
       className="relative w-full py-28 px-6 sm:px-8 lg:px-12 bg-[#1A1A1A] overflow-hidden"
     >
@@ -67,7 +91,16 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
       <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-[#00D4FF]/8 rounded-full blur-[150px] pointer-events-none" />
       <div className="absolute bottom-10 right-1/4 w-[500px] h-[500px] bg-[#FF6B9D]/8 rounded-full blur-[150px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto">
+      {/* Cinematic Scene Flow: Rises to meet About, then slides gently left towards CTA */}
+      <motion.div
+        style={{
+          y: featuresY,
+          x: featuresX,
+          opacity: featuresOpacity,
+          scale: featuresScale,
+        }}
+        className="max-w-7xl mx-auto"
+      >
         {/* H2: Core Services (Montserrat Black 40px, white center) */}
         <div className="text-center mb-16">
           <motion.div
@@ -200,7 +233,11 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
             );
           })}
         </div>
-      </div>
+      </motion.div>
+
+      {/* Cinematic Camera Transition: Continuous gradient fog merging into CTA */}
+      <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-[#0C0C0C] to-transparent pointer-events-none" />
+      <div className="absolute -bottom-1 right-1/4 w-1/2 h-[1px] bg-gradient-to-r from-transparent via-[#FF6B9D]/30 to-transparent shadow-[0_0_12px_#FF6B9D]" />
     </section>
   );
 };

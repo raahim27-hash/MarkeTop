@@ -120,20 +120,22 @@ export const CtaSection: React.FC<CtaSectionProps> = ({ onStartAudit, onBookCall
               placeholder="Enter your website URL (e.g. acme.com)"
               className="w-full bg-transparent px-3 py-2 text-white placeholder-[#707070] text-sm focus:outline-none font-medium"
             />
-            <button
+            <motion.button
               id="cta-quick-submit-btn"
               type="submit"
               disabled={isSubmitting}
-              className="flex-shrink-0 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider text-black bg-[#00D4FF] hover:bg-white shadow-[0_0_15px_#00D4FF] hover:shadow-[0_0_25px_#00D4FF] transition-all duration-300 cursor-pointer"
+              whileHover={{ scale: 1.06, boxShadow: '0 0 20px #00D4FF' }}
+              whileTap={{ scale: 0.92, y: 1 }}
+              className="flex-shrink-0 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider text-black bg-[#00D4FF] hover:bg-white shadow-[0_0_15px_#00D4FF] transition-all duration-300 cursor-pointer"
             >
               {isSubmitting ? 'Analyzing...' : 'Audit'}
-            </button>
+            </motion.button>
           </div>
         </motion.form>
 
         {/* Dual CTA buttons: 
-            - Primary: "Start Free Audit" (neon gradient, pulse)
-            - Secondary: "Book Strategy Call" (outline #00D4FF, tilt on hover) */}
+            - Primary: "Start Free Audit" (swells on hover, realistic press & bounce on click)
+            - Secondary: "Book Strategy Call" (outline #00D4FF, playful tilt on hover) */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -141,11 +143,25 @@ export const CtaSection: React.FC<CtaSectionProps> = ({ onStartAudit, onBookCall
           transition={{ duration: 0.6, delay: 0.4 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-5 w-full"
         >
-          {/* Primary: Start Free Audit (neon gradient, pulse) */}
-          <button
+          {/* Primary: Start Free Audit (neon gradient, swell hover & realistic press/bounce) */}
+          <motion.button
             id="cta-start-free-audit-btn"
             onClick={() => onStartAudit(quickDomain)}
-            className="w-full sm:w-auto px-8 py-4 rounded-full text-black font-bold uppercase tracking-wider text-[15px] sm:text-[16px] flex items-center justify-center gap-2.5 transition-transform duration-300 animate-neon-pulse hover:scale-105 active:scale-95 cursor-pointer"
+            whileHover={{
+              scale: 1.07,
+              y: -5,
+              boxShadow:
+                '0 20px 45px -8px rgba(0, 212, 255, 0.65), 0 10px 30px rgba(255, 107, 157, 0.5), 0 0 35px rgba(0, 212, 255, 0.4)',
+              transition: { type: 'spring', stiffness: 420, damping: 18 },
+            }}
+            whileTap={{
+              scale: 0.93,
+              y: 3,
+              boxShadow:
+                '0 4px 14px rgba(0, 212, 255, 0.4), 0 2px 8px rgba(255, 107, 157, 0.3)',
+              transition: { type: 'spring', stiffness: 750, damping: 22 },
+            }}
+            className="w-full sm:w-auto px-8 py-4 rounded-full text-black font-bold uppercase tracking-wider text-[15px] sm:text-[16px] flex items-center justify-center gap-2.5 animate-neon-pulse cursor-pointer select-none"
             style={{
               background: 'linear-gradient(90deg, #00D4FF 0%, #FF6B9D 100%)',
               fontWeight: 800,
@@ -153,30 +169,35 @@ export const CtaSection: React.FC<CtaSectionProps> = ({ onStartAudit, onBookCall
           >
             <Rocket className="w-5 h-5 text-black" />
             <span>Start Free Audit</span>
-          </button>
+          </motion.button>
 
-          {/* Secondary: Book Strategy Call (outline #00D4FF, tilt on hover) */}
-          <button
+          {/* Secondary: Book Strategy Call (outline #00D4FF, tilt on hover, press down realistic) */}
+          <motion.button
             id="cta-book-strategy-call-btn"
             onClick={onBookCall}
-            className="w-full sm:w-auto px-8 py-4 rounded-full text-white font-bold uppercase tracking-wider text-[15px] sm:text-[16px] flex items-center justify-center gap-2.5 transition-all duration-300 hover:text-[#00D4FF] hover:bg-[#00D4FF]/10 active:scale-95 cursor-pointer group"
+            whileHover={{
+              scale: 1.05,
+              y: -4,
+              rotateX: 4,
+              rotateY: -4,
+              boxShadow: '0 15px 35px rgba(0, 212, 255, 0.4), 0 0 25px rgba(0, 212, 255, 0.65)',
+              transition: { type: 'spring', stiffness: 400, damping: 18 },
+            }}
+            whileTap={{
+              scale: 0.94,
+              y: 2,
+              boxShadow: '0 2px 10px rgba(0, 212, 255, 0.3)',
+              transition: { type: 'spring', stiffness: 700, damping: 20 },
+            }}
+            className="w-full sm:w-auto px-8 py-4 rounded-full text-white font-bold uppercase tracking-wider text-[15px] sm:text-[16px] flex items-center justify-center gap-2.5 transition-colors duration-300 hover:text-[#00D4FF] hover:bg-[#00D4FF]/10 cursor-pointer group"
             style={{
               border: '2px solid #00D4FF',
               boxShadow: '0 0 15px rgba(0, 212, 255, 0.3)',
-              transform: 'perspective(600px)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'perspective(600px) rotateX(4deg) rotateY(-6deg) scale(1.04)';
-              e.currentTarget.style.boxShadow = '0 0 25px rgba(0, 212, 255, 0.65)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg) scale(1)';
-              e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.3)';
             }}
           >
             <Calendar className="w-5 h-5 text-[#00D4FF] group-hover:rotate-12 transition-transform duration-300" />
             <span>Book Strategy Call</span>
-          </button>
+          </motion.button>
         </motion.div>
 
         {/* Feature Checkpoints */}

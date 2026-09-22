@@ -93,12 +93,13 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
           </motion.div>
         </div>
 
-        {/* 3-column neon grid: repeat(auto-fit, minmax(350px, 1fr)) */}
+        {/* 3-column neon grid: repeat(auto-fit, minmax(350px, 1fr)) with 3D perspective */}
         <div
           id="services-grid"
-          className="grid gap-8"
+          className="grid gap-8 perspective-container"
           style={{
             gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+            perspective: '1200px',
           }}
         >
           {servicesList.map((service, index) => {
@@ -112,10 +113,20 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.15 }}
                 whileHover={{
-                  y: -10,
-                  transition: { duration: 0.3, ease: 'easeOut' },
+                  y: -14,
+                  rotateX: 5,
+                  rotateY: -2,
+                  scale: 1.025,
+                  boxShadow:
+                    '0 25px 50px -10px rgba(0, 212, 255, 0.45), 0 0 35px rgba(0, 212, 255, 0.65), 0 10px 30px rgba(255, 107, 157, 0.35), inset 0 0 25px rgba(0, 212, 255, 0.18)',
+                  transition: { type: 'spring', stiffness: 350, damping: 20 },
                 }}
-                className="group relative rounded-2xl p-8 flex flex-col justify-between transition-all duration-300 cursor-pointer"
+                whileTap={{
+                  scale: 0.98,
+                  y: -4,
+                  transition: { type: 'spring', stiffness: 600, damping: 25 },
+                }}
+                className="group relative rounded-2xl p-8 flex flex-col justify-between transition-colors duration-300 cursor-pointer"
                 style={{
                   border: '3px solid #00D4FF',
                   backdropFilter: 'blur(10px)',
@@ -123,34 +134,27 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
                   backgroundColor: 'rgba(26, 26, 26, 0.75)',
                   boxShadow:
                     '0 0 20px rgba(0, 212, 255, 0.25), inset 0 0 15px rgba(0, 212, 255, 0.08)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow =
-                    '0 15px 40px -5px rgba(0, 212, 255, 0.5), 0 0 35px rgba(0, 212, 255, 0.7), inset 0 0 25px rgba(0, 212, 255, 0.2)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow =
-                    '0 0 20px rgba(0, 212, 255, 0.25), inset 0 0 15px rgba(0, 212, 255, 0.08)';
+                  transformStyle: 'preserve-3d',
                 }}
                 onClick={() => onSelectService(service.title)}
               >
                 {/* Top Corner Tag */}
                 <div className="flex items-center justify-between mb-8">
-                  {/* Icon (64px): fas fa-chart-line / #00D4FF Glow */}
-                  <div
-                    className="w-16 h-16 rounded-2xl bg-[#0C0C0C] flex items-center justify-center border border-[#00D4FF]/60 transition-transform duration-300 group-hover:scale-110"
+                  {/* Icon (64px) that breathes slightly larger with soft glow on card hover */}
+                  <motion.div
+                    className="w-16 h-16 rounded-2xl bg-[#0C0C0C] flex items-center justify-center border border-[#00D4FF]/60 transition-all duration-300 group-hover:scale-110 group-hover:border-[#00D4FF]"
                     style={{
                       boxShadow: '0 0 20px #00D4FF, 0 0 35px rgba(0, 212, 255, 0.4)',
                     }}
                   >
-                    <Icon className="w-8 h-8 text-[#00D4FF] filter drop-shadow-[0_0_12px_#00D4FF]" />
-                  </div>
+                    <Icon className="w-8 h-8 text-[#00D4FF] filter drop-shadow-[0_0_12px_#00D4FF] group-hover:scale-110 group-hover:text-white transition-all duration-300" />
+                  </motion.div>
 
                   <div className="text-right">
                     <span className="text-[11px] font-mono uppercase text-[#B0B0B0] block">
                       {service.metric}
                     </span>
-                    <span className="text-sm font-black text-[#00D4FF] font-mono">
+                    <span className="text-sm font-black text-[#00D4FF] font-mono group-hover:text-[#FF6B9D] transition-colors duration-300">
                       {service.metricVal}
                     </span>
                   </div>

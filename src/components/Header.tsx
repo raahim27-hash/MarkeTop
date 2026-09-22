@@ -68,20 +68,36 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAudit }) => {
       }}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Left: MarkeTop Logo */}
-        <a
+        {/* Left: MarkeTop Logo with Confident Subtle Pulse of Recognition */}
+        <motion.a
           id="logo-brand"
           href="#home"
           onClick={(e) => handleNavClick(e, '#home')}
-          className="flex items-center gap-2 group cursor-pointer select-none"
+          whileHover={{
+            scale: 1.035,
+            transition: { type: 'spring', stiffness: 450, damping: 18 },
+          }}
+          whileTap={{ scale: 0.97 }}
+          className="flex items-center gap-2.5 group cursor-pointer select-none relative"
         >
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-[#00D4FF] to-[#FF6B9D] flex items-center justify-center p-0.5 shadow-[0_0_15px_rgba(0,212,255,0.6)] group-hover:scale-105 transition-transform duration-300">
+          <motion.div
+            className="w-9 h-9 rounded-lg bg-gradient-to-tr from-[#00D4FF] to-[#FF6B9D] flex items-center justify-center p-0.5 shadow-[0_0_15px_rgba(0,212,255,0.6)]"
+            whileHover={{
+              scale: [1, 1.14, 1.06],
+              boxShadow: [
+                '0 0 15px rgba(0,212,255,0.6)',
+                '0 0 30px rgba(0,212,255,0.95), 0 0 45px rgba(255,107,157,0.7)',
+                '0 0 22px rgba(0,212,255,0.85), 0 0 35px rgba(255,107,157,0.5)',
+              ],
+              transition: { duration: 0.45, ease: 'easeOut' },
+            }}
+          >
             <div className="w-full h-full bg-[#0C0C0C] rounded-[6px] flex items-center justify-center">
-              <Zap className="w-5 h-5 text-[#00D4FF] animate-pulse" />
+              <Zap className="w-5 h-5 text-[#00D4FF] group-hover:text-white transition-colors duration-200 group-hover:filter group-hover:drop-shadow-[0_0_8px_#00D4FF]" />
             </div>
-          </div>
+          </motion.div>
           <span
-            className="font-black text-[32px] tracking-tight text-[#00D4FF] transition-all duration-300"
+            className="font-black text-[32px] tracking-tight text-[#00D4FF] transition-all duration-300 group-hover:text-white"
             style={{
               textShadow: '0 0 20px #00D4FF, 0 0 35px rgba(0, 212, 255, 0.4)',
               fontWeight: 900,
@@ -89,24 +105,29 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAudit }) => {
           >
             MarkeTop
           </span>
-          <span className="hidden sm:inline-block text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5 rounded-full bg-[#00D4FF]/10 text-[#00D4FF] border border-[#00D4FF]/30 ml-1">
+          <span className="hidden sm:inline-block text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5 rounded-full bg-[#00D4FF]/10 text-[#00D4FF] border border-[#00D4FF]/30 ml-1 group-hover:border-[#FF6B9D]/60 group-hover:text-[#FF6B9D] transition-colors duration-300">
             Data Pulse
           </span>
-        </a>
+        </motion.a>
 
-        {/* Desktop Nav menu */}
+        {/* Desktop Nav menu: Links gently lift and glow softly with brand color warmth */}
         <nav id="desktop-nav-menu" className="hidden md:flex items-center gap-8">
           {navItems.map((item) => {
             const isActive = activeSection === item.href.replace('#', '');
             return (
-              <a
+              <motion.a
                 key={item.label}
                 id={`nav-link-${item.label.toLowerCase()}`}
                 href={item.href}
                 onClick={(e) => handleNavClick(e, item.href)}
-                className={`font-medium text-[16px] transition-all duration-300 relative py-1 ${
+                whileHover={{
+                  y: -2.5,
+                  transition: { type: 'spring', stiffness: 450, damping: 17 },
+                }}
+                whileTap={{ y: 0 }}
+                className={`font-medium text-[16px] transition-all duration-200 relative py-1 ${
                   isActive
-                    ? 'text-[#00D4FF] [text-shadow:0_0_12px_#00D4FF]'
+                    ? 'text-[#00D4FF] [text-shadow:0_0_14px_rgba(0,212,255,0.9),0_0_24px_rgba(255,107,157,0.4)]'
                     : 'text-[#B0B0B0] hover:text-[#00D4FF]'
                 } nav-link-glow`}
                 style={{ fontWeight: 500 }}
@@ -115,23 +136,35 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAudit }) => {
                 {isActive && (
                   <motion.span
                     layoutId="activeNavIndicator"
-                    className="absolute bottom-[-4px] left-0 right-0 h-[2px] bg-[#00D4FF] shadow-[0_0_10px_#00D4FF]"
+                    className="absolute bottom-[-4px] left-0 right-0 h-[2px] bg-gradient-to-r from-[#00D4FF] to-[#FF6B9D] shadow-[0_0_12px_#00D4FF,0_0_20px_rgba(255,107,157,0.6)]"
                     transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                   />
                 )}
-              </a>
+              </motion.a>
             );
           })}
 
-          {/* Quick Header CTA */}
-          <button
+          {/* Quick Header CTA with responsive tactile press down & bounce back */}
+          <motion.button
             id="header-cta-button"
             onClick={onOpenAudit}
-            className="ml-2 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider text-black bg-gradient-to-r from-[#00D4FF] to-[#FF6B9D] shadow-[0_0_15px_rgba(0,212,255,0.4)] hover:shadow-[0_0_25px_rgba(0,212,255,0.8)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-1.5"
+            whileHover={{
+              scale: 1.05,
+              y: -2,
+              boxShadow: '0 10px 25px rgba(0,212,255,0.5), 0 0 20px rgba(255,107,157,0.4)',
+              transition: { type: 'spring', stiffness: 400, damping: 17 },
+            }}
+            whileTap={{
+              scale: 0.94,
+              y: 1,
+              boxShadow: '0 2px 8px rgba(0,212,255,0.3)',
+              transition: { type: 'spring', stiffness: 700, damping: 20 },
+            }}
+            className="ml-2 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider text-black bg-gradient-to-r from-[#00D4FF] to-[#FF6B9D] shadow-[0_0_15px_rgba(0,212,255,0.4)] transition-colors flex items-center gap-1.5 cursor-pointer"
           >
             <span>Live Audit</span>
             <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          </motion.button>
         </nav>
 
         {/* Mobile Hamburger Button */}

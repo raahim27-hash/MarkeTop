@@ -58,8 +58,8 @@ export const About: React.FC = () => {
 
         {/* 2-column Grid (mobile stack) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          {/* LEFT: Stats cards (3 mini cards) - white cards on dark #2D2D2D gradient bg */}
-          <div className="lg:col-span-5 flex flex-col gap-6">
+          {/* LEFT: Stats cards (3 mini cards) - feature cards with playful lift & slight tilt forward on hover */}
+          <div className="lg:col-span-5 flex flex-col gap-6" style={{ perspective: '1200px' }}>
             {/* Card 1: 500+ Projects (chart icon, Neon Glow) */}
             <motion.div
               id="stat-card-projects"
@@ -67,19 +67,29 @@ export const About: React.FC = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              whileHover={{ y: -6, scale: 1.02 }}
-              className="group relative bg-[#FFFFFD] text-[#0C0C0C] rounded-2xl p-6 sm:p-7 shadow-[0_10px_30px_rgba(0,0,0,0.5)] border-2 border-transparent hover:border-[#00D4FF] transition-all duration-300"
+              whileHover={{
+                y: -12,
+                rotateX: 4,
+                rotateY: 2,
+                scale: 1.025,
+                boxShadow:
+                  '0 25px 45px rgba(0,0,0,0.65), 0 0 30px rgba(0, 212, 255, 0.35)',
+                transition: { type: 'spring', stiffness: 360, damping: 20 },
+              }}
+              whileTap={{ scale: 0.98, y: -2 }}
+              className="group relative bg-[#FFFFFD] text-[#0C0C0C] rounded-2xl p-6 sm:p-7 shadow-[0_10px_30px_rgba(0,0,0,0.5)] border-2 border-transparent hover:border-[#00D4FF] transition-colors duration-300 cursor-pointer"
+              style={{ transformStyle: 'preserve-3d' }}
             >
               <div className="absolute top-0 right-0 w-24 h-24 bg-[#00D4FF]/10 rounded-bl-full pointer-events-none transition-opacity group-hover:opacity-100" />
               <div className="flex items-center gap-5">
                 <div
-                  className="w-16 h-16 rounded-xl bg-[#0C0C0C] flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
+                  className="w-16 h-16 rounded-xl bg-[#0C0C0C] flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_25px_#00D4FF]"
                   style={{
                     boxShadow: '0 0 20px rgba(0, 212, 255, 0.65)',
                     border: '1px solid #00D4FF',
                   }}
                 >
-                  <BarChart3 className="w-8 h-8 text-[#00D4FF] filter drop-shadow-[0_0_8px_#00D4FF]" />
+                  <BarChart3 className="w-8 h-8 text-[#00D4FF] filter drop-shadow-[0_0_8px_#00D4FF] group-hover:text-white transition-colors" />
                 </div>
                 <div>
                   <div className="flex items-baseline gap-1">
@@ -110,19 +120,29 @@ export const About: React.FC = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              whileHover={{ y: -6, scale: 1.02 }}
-              className="group relative bg-[#FFFFFD] text-[#0C0C0C] rounded-2xl p-6 sm:p-7 shadow-[0_10px_30px_rgba(0,0,0,0.5)] border-2 border-transparent hover:border-[#FF6B9D] transition-all duration-300"
+              whileHover={{
+                y: -12,
+                rotateX: 4,
+                rotateY: 2,
+                scale: 1.025,
+                boxShadow:
+                  '0 25px 45px rgba(0,0,0,0.65), 0 0 30px rgba(255, 107, 157, 0.4)',
+                transition: { type: 'spring', stiffness: 360, damping: 20 },
+              }}
+              whileTap={{ scale: 0.98, y: -2 }}
+              className="group relative bg-[#FFFFFD] text-[#0C0C0C] rounded-2xl p-6 sm:p-7 shadow-[0_10px_30px_rgba(0,0,0,0.5)] border-2 border-transparent hover:border-[#FF6B9D] transition-colors duration-300 cursor-pointer"
+              style={{ transformStyle: 'preserve-3d' }}
             >
               <div className="absolute top-0 right-0 w-24 h-24 bg-[#FF6B9D]/10 rounded-bl-full pointer-events-none transition-opacity group-hover:opacity-100" />
               <div className="flex items-center gap-5">
                 <div
-                  className="w-16 h-16 rounded-xl bg-[#0C0C0C] flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
+                  className="w-16 h-16 rounded-xl bg-[#0C0C0C] flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_25px_#FF6B9D]"
                   style={{
                     boxShadow: '0 0 20px rgba(255, 107, 157, 0.65)',
                     border: '1px solid #FF6B9D',
                   }}
                 >
-                  <Trophy className="w-8 h-8 text-[#FF6B9D] filter drop-shadow-[0_0_8px_#FF6B9D]" />
+                  <Trophy className="w-8 h-8 text-[#FF6B9D] filter drop-shadow-[0_0_8px_#FF6B9D] group-hover:text-white transition-colors" />
                 </div>
                 <div>
                   <div className="flex items-baseline gap-1">
@@ -153,19 +173,29 @@ export const About: React.FC = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              whileHover={{ y: -6, scale: 1.02 }}
-              className="group relative bg-[#FFFFFD] text-[#0C0C0C] rounded-2xl p-6 sm:p-7 shadow-[0_10px_30px_rgba(0,0,0,0.5)] border-2 border-transparent hover:border-[#00D4FF] transition-all duration-300"
+              whileHover={{
+                y: -12,
+                rotateX: 4,
+                rotateY: 2,
+                scale: 1.025,
+                boxShadow:
+                  '0 25px 45px rgba(0,0,0,0.65), 0 0 30px rgba(0, 212, 255, 0.35)',
+                transition: { type: 'spring', stiffness: 360, damping: 20 },
+              }}
+              whileTap={{ scale: 0.98, y: -2 }}
+              className="group relative bg-[#FFFFFD] text-[#0C0C0C] rounded-2xl p-6 sm:p-7 shadow-[0_10px_30px_rgba(0,0,0,0.5)] border-2 border-transparent hover:border-[#00D4FF] transition-colors duration-300 cursor-pointer"
+              style={{ transformStyle: 'preserve-3d' }}
             >
               <div className="absolute top-0 right-0 w-24 h-24 bg-[#00D4FF]/10 rounded-bl-full pointer-events-none transition-opacity group-hover:opacity-100" />
               <div className="flex items-center gap-5">
                 <div
-                  className="w-16 h-16 rounded-xl bg-[#0C0C0C] flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
+                  className="w-16 h-16 rounded-xl bg-[#0C0C0C] flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_25px_#00D4FF]"
                   style={{
                     boxShadow: '0 0 20px rgba(0, 212, 255, 0.65)',
                     border: '1px solid #00D4FF',
                   }}
                 >
-                  <DollarSign className="w-8 h-8 text-[#00D4FF] filter drop-shadow-[0_0_8px_#00D4FF]" />
+                  <DollarSign className="w-8 h-8 text-[#00D4FF] filter drop-shadow-[0_0_8px_#00D4FF] group-hover:text-white transition-colors" />
                 </div>
                 <div>
                   <div className="flex items-baseline gap-1">
@@ -198,6 +228,12 @@ export const About: React.FC = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
+              whileHover={{
+                scale: 1.025,
+                boxShadow:
+                  '0 0 35px rgba(0, 212, 255, 0.55), 0 20px 50px rgba(0,0,0,0.8), inset 0 0 30px rgba(0, 212, 255, 0.15)',
+                transition: { duration: 0.4, ease: [0.25, 1, 0.5, 1] },
+              }}
               className="group relative rounded-2xl overflow-hidden cursor-pointer"
               style={{
                 border: '3px solid #00D4FF',
@@ -208,16 +244,34 @@ export const About: React.FC = () => {
               }}
             >
               {/* Inner wrapper with Hover Zoom on dashboard */}
-              <div className="p-5 sm:p-6 lg:p-7 transition-transform duration-500 ease-out group-hover:scale-[1.03]">
-                {/* Dashboard Window Header */}
+              <div className="p-5 sm:p-6 lg:p-7 transition-transform duration-500 ease-out group-hover:scale-[1.01]">
+                {/* Dashboard Window Header with Lead Strategist/Coder Profile image that breathes on hover */}
                 <div className="flex flex-wrap items-center justify-between pb-4 border-b border-[#00D4FF]/20 gap-3">
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[#FF6B9D] inline-block shadow-[0_0_8px_#FF6B9D]" />
-                    <span className="w-3 h-3 rounded-full bg-amber-400 inline-block" />
-                    <span className="w-3 h-3 rounded-full bg-[#00D4FF] inline-block shadow-[0_0_8px_#00D4FF]" />
-                    <span className="font-mono text-xs text-[#00D4FF] font-semibold ml-2">
-                      MARKETOP_TELEMETRY_ENGINE_v4.8
-                    </span>
+                  <div className="flex items-center gap-3">
+                    {/* Coder/Strategist Profile Photo: Breathes slightly larger with soft glow on hover */}
+                    <div className="relative group/avatar">
+                      <img
+                        src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80"
+                        alt="Elena Vance - Lead SEO Systems Architect"
+                        referrerPolicy="no-referrer"
+                        className="w-10 h-10 rounded-lg object-cover border border-[#00D4FF]/50 shadow-[0_0_12px_rgba(0,212,255,0.4)] transition-all duration-400 ease-out hover:scale-115 hover:shadow-[0_0_25px_#00D4FF,0_0_35px_rgba(255,107,157,0.5)] cursor-pointer"
+                      />
+                      <span className="absolute -bottom-1 -right-1 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#0C0C0C] shadow-[0_0_6px_#10b981]" />
+                    </div>
+
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#FF6B9D] inline-block shadow-[0_0_6px_#FF6B9D]" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#00D4FF] inline-block shadow-[0_0_6px_#00D4FF]" />
+                        <span className="font-mono text-xs text-[#00D4FF] font-semibold ml-1">
+                          MARKETOP_TELEMETRY_v4.8
+                        </span>
+                      </div>
+                      <div className="text-[10px] text-[#B0B0B0] font-mono mt-0.5">
+                        Lead Architect: Elena Vance (Stanford CS / Ex-Google Search)
+                      </div>
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -225,7 +279,7 @@ export const About: React.FC = () => {
                       onClick={() => setActiveTab('chart')}
                       className={`px-2.5 py-1 rounded text-[11px] font-mono transition-colors ${
                         activeTab === 'chart'
-                          ? 'bg-[#00D4FF] text-black font-bold'
+                          ? 'bg-[#00D4FF] text-black font-bold shadow-[0_0_10px_#00D4FF]'
                           : 'bg-[#1A1A1A] text-[#B0B0B0] hover:text-white'
                       }`}
                     >
@@ -235,7 +289,7 @@ export const About: React.FC = () => {
                       onClick={() => setActiveTab('console')}
                       className={`px-2.5 py-1 rounded text-[11px] font-mono transition-colors ${
                         activeTab === 'console'
-                          ? 'bg-[#00D4FF] text-black font-bold'
+                          ? 'bg-[#00D4FF] text-black font-bold shadow-[0_0_10px_#00D4FF]'
                           : 'bg-[#1A1A1A] text-[#B0B0B0] hover:text-white'
                       }`}
                     >
@@ -245,7 +299,7 @@ export const About: React.FC = () => {
                       onClick={() => setActiveTab('vitals')}
                       className={`px-2.5 py-1 rounded text-[11px] font-mono transition-colors ${
                         activeTab === 'vitals'
-                          ? 'bg-[#00D4FF] text-black font-bold'
+                          ? 'bg-[#00D4FF] text-black font-bold shadow-[0_0_10px_#00D4FF]'
                           : 'bg-[#1A1A1A] text-[#B0B0B0] hover:text-white'
                       }`}
                     >
@@ -396,6 +450,28 @@ export const About: React.FC = () => {
                     </div>
                   </div>
                 )}
+
+                {/* Interactive Visual Engine Preview Image that breathes slightly larger with soft glow on hover */}
+                <div className="mt-4 relative overflow-hidden rounded-xl border border-[#00D4FF]/30 group/preview cursor-pointer">
+                  <img
+                    src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80"
+                    alt="MarkeTop Neural SEO Analytics Command Engine"
+                    referrerPolicy="no-referrer"
+                    className="w-full h-24 sm:h-28 object-cover opacity-75 transition-all duration-500 ease-out group-hover/preview:scale-[1.035] group-hover/preview:opacity-100 group-hover/preview:shadow-[0_0_35px_rgba(0,212,255,0.5)]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0C0C0C] via-[#0C0C0C]/40 to-transparent pointer-events-none" />
+                  <div className="absolute bottom-2 left-3 right-3 flex items-center justify-between pointer-events-none">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-[#00D4FF] shadow-[0_0_6px_#00D4FF]" />
+                      <span className="text-[11px] font-mono font-semibold text-white group-hover/preview:text-[#00D4FF] transition-colors">
+                        Live Multi-Cluster SERP Engine
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-mono text-[#00D4FF] bg-[#1A1A2E]/80 px-2 py-0.5 rounded border border-[#00D4FF]/30">
+                      99.9% Telemetry Fidelity
+                    </span>
+                  </div>
+                </div>
 
                 {/* Bottom interactive status bar */}
                 <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-[#B0B0B0]">

@@ -133,13 +133,18 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#00D4FF]/10 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-[450px] h-[450px] bg-[#FF6B9D]/10 rounded-full blur-[130px] pointer-events-none" />
 
-      {/* Floating Animated Data Telemetry Chips (Data Points throughout Hero) */}
+      {/* Floating Animated Data Telemetry Chips (Data Points throughout Hero) that breathe on hover */}
       <motion.div
         id="telemetry-badge-traffic"
         initial={{ opacity: 0, x: -30 }}
         animate={{ opacity: 1, x: 0 }}
+        whileHover={{
+          scale: 1.04,
+          boxShadow: '0 0 30px rgba(0,212,255,0.45), 0 10px 25px rgba(0,0,0,0.5)',
+          transition: { duration: 0.3, ease: 'easeOut' },
+        }}
         transition={{ duration: 0.8, delay: 0.3 }}
-        className="hidden lg:flex absolute left-8 xl:left-20 top-1/3 items-center gap-3 p-3.5 rounded-2xl bg-[#1A1A2E]/75 backdrop-blur-md border border-[#00D4FF]/30 shadow-[0_0_20px_rgba(0,212,255,0.25)] z-10"
+        className="hidden lg:flex absolute left-8 xl:left-20 top-1/3 items-center gap-3 p-3.5 rounded-2xl bg-[#1A1A2E]/75 backdrop-blur-md border border-[#00D4FF]/30 shadow-[0_0_20px_rgba(0,212,255,0.25)] z-10 cursor-pointer"
       >
         <div className="w-10 h-10 rounded-xl bg-[#00D4FF]/15 flex items-center justify-center text-[#00D4FF] border border-[#00D4FF]/40">
           <TrendingUp className="w-5 h-5" />
@@ -159,8 +164,13 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
         id="telemetry-badge-keywords"
         initial={{ opacity: 0, x: 30 }}
         animate={{ opacity: 1, x: 0 }}
+        whileHover={{
+          scale: 1.04,
+          boxShadow: '0 0 30px rgba(255,107,157,0.4), 0 10px 25px rgba(0,0,0,0.5)',
+          transition: { duration: 0.3, ease: 'easeOut' },
+        }}
         transition={{ duration: 0.8, delay: 0.5 }}
-        className="hidden lg:flex absolute right-8 xl:right-20 top-1/4 items-center gap-3 p-3.5 rounded-2xl bg-[#1A1A2E]/75 backdrop-blur-md border border-[#FF6B9D]/30 shadow-[0_0_20px_rgba(255,107,157,0.2)] z-10"
+        className="hidden lg:flex absolute right-8 xl:right-20 top-1/4 items-center gap-3 p-3.5 rounded-2xl bg-[#1A1A2E]/75 backdrop-blur-md border border-[#FF6B9D]/30 shadow-[0_0_20px_rgba(255,107,157,0.2)] z-10 cursor-pointer"
       >
         <div className="w-10 h-10 rounded-xl bg-[#FF6B9D]/15 flex items-center justify-center text-[#FF6B9D] border border-[#FF6B9D]/40">
           <Search className="w-5 h-5" />
@@ -180,8 +190,13 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
         id="telemetry-badge-datapulse"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
+        whileHover={{
+          scale: 1.04,
+          boxShadow: '0 0 25px rgba(0,212,255,0.5)',
+          transition: { duration: 0.3, ease: 'easeOut' },
+        }}
         transition={{ duration: 0.8, delay: 0.7 }}
-        className="hidden md:flex absolute bottom-12 left-12 lg:left-24 items-center gap-3 px-4 py-2.5 rounded-full bg-[#16213E]/80 backdrop-blur-md border border-[#00D4FF]/40 shadow-[0_0_15px_rgba(0,212,255,0.3)] z-10 text-xs"
+        className="hidden md:flex absolute bottom-12 left-12 lg:left-24 items-center gap-3 px-4 py-2.5 rounded-full bg-[#16213E]/80 backdrop-blur-md border border-[#00D4FF]/40 shadow-[0_0_15px_rgba(0,212,255,0.3)] z-10 text-xs cursor-pointer"
       >
         <span className="relative flex h-2.5 w-2.5">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00D4FF] opacity-75"></span>
@@ -232,17 +247,31 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
           Analytics-powered marketing strategies that convert visitors to revenue
         </motion.p>
 
-        {/* CTA Button: Launch Analytics (gradient #00D4FF -> #FF6B9D, 20px padding, 50px radius, pulse animations 2s infinite, hover scale 1.05) */}
+        {/* CTA Button: Launch Analytics (swells invitingly with shadow lift on hover, presses down realistically and bounces back on click) */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.45 }}
           className="flex flex-col sm:flex-row items-center gap-4"
         >
-          <button
+          <motion.button
             id="hero-launch-analytics-btn"
             onClick={onLaunchAnalytics}
-            className="group relative cursor-pointer font-bold text-black uppercase tracking-wider text-[15px] sm:text-[16px] transition-all duration-300 flex items-center justify-center gap-3 animate-neon-pulse hover:scale-105"
+            whileHover={{
+              scale: 1.07,
+              y: -5,
+              boxShadow:
+                '0 20px 45px -8px rgba(0, 212, 255, 0.65), 0 10px 30px rgba(255, 107, 157, 0.5), 0 0 35px rgba(0, 212, 255, 0.4)',
+              transition: { type: 'spring', stiffness: 420, damping: 18 },
+            }}
+            whileTap={{
+              scale: 0.93,
+              y: 3,
+              boxShadow:
+                '0 4px 14px rgba(0, 212, 255, 0.4), 0 2px 8px rgba(255, 107, 157, 0.3)',
+              transition: { type: 'spring', stiffness: 750, damping: 22 },
+            }}
+            className="group relative cursor-pointer font-bold text-black uppercase tracking-wider text-[15px] sm:text-[16px] flex items-center justify-center gap-3 animate-neon-pulse select-none"
             style={{
               background: 'linear-gradient(90deg, #00D4FF 0%, #FF6B9D 100%)',
               padding: '20px 38px',
@@ -251,8 +280,8 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
           >
             <Sparkles className="w-5 h-5 text-black group-hover:rotate-12 transition-transform duration-300" />
             <span>Launch Analytics</span>
-            <ArrowUpRight className="w-5 h-5 text-black group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
-          </button>
+            <ArrowUpRight className="w-5 h-5 text-black group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
+          </motion.button>
         </motion.div>
 
         {/* Mini Trust Metrics Bar underneath CTA */}

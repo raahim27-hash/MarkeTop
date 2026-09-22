@@ -13,19 +13,37 @@ export const Footer: React.FC = () => {
 
       <div className="max-w-7xl mx-auto">
         {/* Top row flex (space-between) */}
-        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8 pb-12 border-b border-white/5">
-          {/* LEFT: Contact block (#B0B0B0 14PX) "hello@marketop.com" | "+1 (666) 123-4567" | "NYC, USA" */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8 pb-12 border-b border-white/5">
+          {/* Brand Logo in Footer with Confident Subtle Pulse of Recognition */}
+          <div className="flex items-center gap-3">
+            <a
+              href="#home"
+              id="footer-brand-logo"
+              className="group flex items-center gap-2.5 transition-transform duration-300 hover:scale-105"
+            >
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#00D4FF] to-[#FF6B9D] p-0.5 shadow-[0_0_12px_rgba(0,212,255,0.5)] group-hover:shadow-[0_0_20px_#00D4FF]">
+                <div className="w-full h-full bg-[#0C0C0C] rounded-[6px] flex items-center justify-center">
+                  <span className="text-[#00D4FF] font-black text-xs group-hover:scale-110 transition-transform">M</span>
+                </div>
+              </div>
+              <span className="font-black text-xl text-white tracking-tight group-hover:text-[#00D4FF] transition-colors">
+                MarkeTop
+              </span>
+            </a>
+          </div>
+
+          {/* LEFT/CENTER: Contact block (#B0B0B0 14PX) with gentle lift & warm glow on hover */}
           <div
             id="footer-contact-block"
-            className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 text-center sm:text-left text-[#B0B0B0]"
+            className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left text-[#B0B0B0]"
             style={{ fontSize: '14px', color: '#B0B0B0' }}
           >
             <a
               id="footer-email-link"
               href="mailto:hello@marketop.com"
-              className="flex items-center gap-2 hover:text-[#00D4FF] transition-colors duration-200 group"
+              className="flex items-center gap-2 hover:text-[#00D4FF] hover:-translate-y-0.5 transition-all duration-200 group nav-link-glow"
             >
-              <div className="w-8 h-8 rounded-lg bg-[#1A1A1A] flex items-center justify-center border border-white/10 group-hover:border-[#00D4FF]/50">
+              <div className="w-8 h-8 rounded-lg bg-[#1A1A1A] flex items-center justify-center border border-white/10 group-hover:border-[#00D4FF]/60 group-hover:shadow-[0_0_10px_#00D4FF] transition-all">
                 <Mail className="w-4 h-4 text-[#00D4FF]" />
               </div>
               <span className="font-medium">hello@marketop.com</span>
@@ -36,9 +54,9 @@ export const Footer: React.FC = () => {
             <a
               id="footer-phone-link"
               href="tel:+16661234567"
-              className="flex items-center gap-2 hover:text-[#00D4FF] transition-colors duration-200 group"
+              className="flex items-center gap-2 hover:text-[#00D4FF] hover:-translate-y-0.5 transition-all duration-200 group nav-link-glow"
             >
-              <div className="w-8 h-8 rounded-lg bg-[#1A1A1A] flex items-center justify-center border border-white/10 group-hover:border-[#00D4FF]/50">
+              <div className="w-8 h-8 rounded-lg bg-[#1A1A1A] flex items-center justify-center border border-white/10 group-hover:border-[#00D4FF]/60 group-hover:shadow-[0_0_10px_#00D4FF] transition-all">
                 <Phone className="w-4 h-4 text-[#00D4FF]" />
               </div>
               <span className="font-medium">+1 (666) 123-4567</span>
@@ -48,12 +66,12 @@ export const Footer: React.FC = () => {
 
             <div
               id="footer-location-block"
-              className="flex items-center gap-2 group"
+              className="flex items-center gap-2 group cursor-default"
             >
-              <div className="w-8 h-8 rounded-lg bg-[#1A1A1A] flex items-center justify-center border border-white/10">
+              <div className="w-8 h-8 rounded-lg bg-[#1A1A1A] flex items-center justify-center border border-white/10 group-hover:border-[#FF6B9D]/60 group-hover:shadow-[0_0_10px_#FF6B9D] transition-all">
                 <MapPin className="w-4 h-4 text-[#FF6B9D]" />
               </div>
-              <span className="font-medium">NYC, USA</span>
+              <span className="font-medium group-hover:text-white transition-colors">NYC, USA</span>
             </div>
           </div>
 

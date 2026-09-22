@@ -132,3 +132,17 @@
   color: #00D4FF;
   filter: drop-shadow(0 0 10px #00D4FF);
 }
+
+/* Video & static background subtle organic breathing */
+@keyframes subtle-breathe {
+  0%, 100% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: scale(1.035) translate3d(0, -5px, 0);
+  }
+}
+
+.animate-subtle-breathe {
+  animation: subtle-breathe 16s infinite ease-in-out;
+}

@@ -4,13 +4,14 @@ import {
   ArrowUpRight, 
   TrendingUp, 
   Sparkles, 
-  Activity, 
   Search, 
   ShieldCheck, 
   Film, 
   CheckCircle2,
   Maximize2,
-  Wifi
+  Play,
+  Pause,
+  RotateCcw
 } from 'lucide-react';
 
 interface HeroProps {
@@ -23,24 +24,13 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const [pulseCount, setPulseCount] = useState(14820);
-  const [isMobile, setIsMobile] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isScrubbing, setIsScrubbing] = useState(false);
   const [scrubProgress, setScrubProgress] = useState(0);
 
   const videoUrl = 'https://res.cloudinary.com/xmc69m43/video/upload/v1790103784/ai_video.mp4';
   const posterUrl = 'https://res.cloudinary.com/xmc69m43/video/upload/v1790103784/ai_video.jpg';
-
-  // Responsive device check for graceful mobile fallback
-  useEffect(() => {
-    const checkMobile = () => {
-      const isNarrow = window.innerWidth < 768;
-      const isTouch = ('ontouchstart' in window || navigator.maxTouchPoints > 0) && window.innerWidth < 1024;
-      setIsMobile(isNarrow || isTouch);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   // Live telemetry pulse ticker
   useEffect(() => {
@@ -50,7 +40,7 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
     return () => clearInterval(interval);
   }, []);
 
-  // Original interactive particle canvas background
+  // Original interactive particle canvas background (Preserved 100%)
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -146,41 +136,50 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
     };
   }, []);
 
-  // Video Scroll-Scrubbing Engine:
-  // Progresses naturally with scroll direction: forward scrolling down, backward scrolling up.
+  // Universal Video Play & Scroll-Scrubbing Engine (Works in BOTH mobile and web views)
   useEffect(() => {
-    if (isMobile) return;
-
     const video = videoRef.current;
     if (!video) return;
 
     let rafId: number;
     let targetTime = 0;
     let lastSeekTime = 0;
+    let scrollTimeout: NodeJS.Timeout | null = null;
 
-    const primeVideo = () => {
+    // Explicitly configure for mobile iOS & Android inline autoplay
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+
+    const startPlayback = () => {
       setVideoLoaded(true);
-      if (video.currentTime === 0) {
-        try {
-          video.currentTime = 0.001;
-        } catch {
-          // Safe ignore
-        }
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true);
+          })
+          .catch(() => {
+            // Autoplay policy fallback: ready to play on first touch/interaction
+            setIsPlaying(false);
+          });
       }
     };
 
-    video.addEventListener('loadeddata', primeVideo);
-    video.addEventListener('canplay', primeVideo);
-    video.addEventListener('loadedmetadata', primeVideo);
+    video.addEventListener('loadeddata', startPlayback);
+    video.addEventListener('canplay', startPlayback);
+    video.addEventListener('loadedmetadata', startPlayback);
+    video.addEventListener('play', () => setIsPlaying(true));
+    video.addEventListener('pause', () => setIsPlaying(false));
 
     if (video.readyState >= 2) {
-      primeVideo();
+      startPlayback();
     }
 
+    // Scroll scrubbing handler: forward when scrolling down, backward when scrolling up
     const handleScroll = () => {
       const scrollY = window.scrollY || window.pageYOffset;
-      // Scrub distance across hero section
-      const scrubRange = Math.max(window.innerHeight * 1.25, 750);
+      const scrubRange = Math.max(window.innerHeight * 1.25, 680);
       const progress = Math.min(1, Math.max(0, scrollY / scrubRange));
       setScrubProgress(progress);
 
@@ -189,20 +188,38 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
         : 5.184;
 
       targetTime = progress * Math.max(0, duration - 0.06);
+
+      // Active scroll scrubbing mode
+      setIsScrubbing(true);
+
+      // Pause continuous playback during active scroll scrub so frames track scroll precisely
+      if (!video.paused) {
+        video.pause();
+      }
+
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        setIsScrubbing(false);
+        // Seamlessly resume continuous video playback when scrolling stops
+        if (video && video.paused) {
+          video.play().catch(() => {});
+        }
+      }, 650);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
+    window.addEventListener('touchmove', handleScroll, { passive: true });
 
-    // High performance RAF loop: smoothly scrubs forward & backward
+    // High performance RAF loop: smoothly scrubs forward & backward across all viewports
     const scrubLoop = () => {
       if (video && video.readyState >= 1) {
         const diff = targetTime - video.currentTime;
         const now = performance.now();
 
-        if (Math.abs(diff) > 0.012 && (!video.seeking || now - lastSeekTime > 35)) {
+        // Seek smoothly during scroll events
+        if (Math.abs(diff) > 0.012 && (!video.seeking || now - lastSeekTime > 32)) {
           lastSeekTime = now;
-          const step = diff * 0.32;
+          const step = diff * 0.35;
           const duration = video.duration || 5.184;
           const nextTime = Math.max(0, Math.min(duration - 0.04, video.currentTime + step));
           try {
@@ -219,12 +236,36 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('touchmove', handleScroll);
       cancelAnimationFrame(rafId);
-      video.removeEventListener('loadeddata', primeVideo);
-      video.removeEventListener('canplay', primeVideo);
-      video.removeEventListener('loadedmetadata', primeVideo);
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      video.removeEventListener('loadeddata', startPlayback);
+      video.removeEventListener('canplay', startPlayback);
+      video.removeEventListener('loadedmetadata', startPlayback);
     };
-  }, [isMobile]);
+  }, []);
+
+  // Interactive toggle Play / Pause for user
+  const handleTogglePlay = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (video.paused) {
+      video.play().then(() => setIsPlaying(true)).catch(() => {});
+    } else {
+      video.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const handleRestartVideo = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const video = videoRef.current;
+    if (!video) return;
+    video.currentTime = 0;
+    video.play().then(() => setIsPlaying(true)).catch(() => {});
+  };
 
   // Motion transforms for 3D showcase perspective breathing
   const { scrollYProgress } = useScroll({
@@ -232,15 +273,15 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
     offset: ['start start', 'end start'],
   });
 
-  const showcaseRotateX = useTransform(scrollYProgress, [0, 0.6], [8, -2]);
-  const showcaseScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.025]);
-  const showcaseY = useTransform(scrollYProgress, [0, 0.8], [0, 30]);
+  const showcaseRotateX = useTransform(scrollYProgress, [0, 0.6], [6, -2]);
+  const showcaseScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.02]);
+  const showcaseY = useTransform(scrollYProgress, [0, 0.8], [0, 25]);
 
   return (
     <section
       ref={heroRef}
       id="home"
-      className="relative min-h-screen w-full flex flex-col items-center justify-start overflow-hidden pt-32 pb-24 px-4 sm:px-6 lg:px-8"
+      className="relative min-h-screen w-full flex flex-col items-center justify-start overflow-hidden pt-28 sm:pt-32 pb-20 sm:pb-24 px-4 sm:px-6 lg:px-8"
       style={{
         background: 'linear-gradient(135deg, #0C0C0C 0%, #1A1A2E 50%, #16213E 100%)',
       }}
@@ -250,7 +291,6 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
         ORIGINAL BACKGROUND: PARTICLES & AMBIENT NEON GLOWS (PRESERVED 100%)
         ====================================================================
       */}
-      {/* Animated subtle particle canvas */}
       <canvas
         id="hero-particle-canvas"
         ref={canvasRef}
@@ -271,7 +311,7 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
         className="absolute bottom-1/4 right-10 w-[500px] h-[500px] bg-[#FF6B9D]/12 rounded-full blur-[140px] pointer-events-none z-0"
       />
 
-      {/* Floating Animated Data Telemetry Chips (Original Positioned Badges) */}
+      {/* Floating Animated Data Telemetry Chips (Desktop original position) */}
       <motion.div
         id="telemetry-badge-traffic"
         initial={{ opacity: 0, x: -40, filter: 'blur(8px)' }}
@@ -329,13 +369,13 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
         HERO COPY & ACTION ROW (MOVIE OPENING REVEAL)
         ====================================================================
       */}
-      <div className="relative z-10 w-full max-w-4xl mx-auto text-center flex flex-col items-center mb-10">
+      <div className="relative z-10 w-full max-w-4xl mx-auto text-center flex flex-col items-center mb-8 sm:mb-10">
         {/* Subtle Cyber Tag / Pulse Indicator */}
         <motion.div
           initial={{ opacity: 0, y: -20, filter: 'blur(6px)' }}
           animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           transition={{ duration: 0.85, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#1A1A2E]/90 border border-[#00D4FF]/40 text-[#00D4FF] text-xs font-semibold uppercase tracking-widest mb-6 shadow-[0_0_20px_rgba(0,212,255,0.25)]"
+          className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-[#1A1A2E]/90 border border-[#00D4FF]/40 text-[#00D4FF] text-[11px] sm:text-xs font-semibold uppercase tracking-widest mb-5 sm:mb-6 shadow-[0_0_20px_rgba(0,212,255,0.25)]"
         >
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00D4FF] opacity-75"></span>
@@ -345,8 +385,8 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
           <span className="font-mono text-[#00D4FF] font-bold">
             {pulseCount.toLocaleString()} evt/s
           </span>
-          <span className="text-[#555]">|</span>
-          <span className="text-[#B0B0B0] font-normal">Next-Gen Digital Intelligence</span>
+          <span className="text-[#555] hidden sm:inline">|</span>
+          <span className="text-[#B0B0B0] font-normal hidden sm:inline">Next-Gen Digital Intelligence</span>
         </motion.div>
 
         {/* H1: Your SEO Growth Engine. (Movie opening reveal sweep) */}
@@ -355,7 +395,7 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
           initial={{ opacity: 0, y: 55, filter: 'blur(12px)' }}
           animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           transition={{ duration: 1.25, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
-          className="font-black text-[38px] sm:text-[48px] md:text-[60px] text-white leading-[1.08] tracking-tight mb-5"
+          className="font-black text-[34px] sm:text-[48px] md:text-[60px] text-white leading-[1.1] tracking-tight mb-4 sm:mb-5"
           style={{
             fontWeight: 900,
             textShadow: '0 0 30px rgba(255, 255, 255, 0.5), 0 0 60px rgba(0, 212, 255, 0.3)',
@@ -370,7 +410,7 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
           initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
           animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           transition={{ duration: 1.15, delay: 1.05, ease: [0.16, 1, 0.3, 1] }}
-          className="text-[#B0B0B0] text-[18px] sm:text-[21px] md:text-[22px] leading-relaxed max-w-[720px] mb-8 font-normal"
+          className="text-[#B0B0B0] text-[16px] sm:text-[20px] md:text-[22px] leading-relaxed max-w-[720px] mb-6 sm:mb-8 font-normal px-2"
         >
           We fuse deep SEO analytics with powerful automation to deliver sustained organic growth and exceptional ROI for your business.
         </motion.p>
@@ -398,7 +438,7 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
               boxShadow: '0 4px 14px rgba(0, 212, 255, 0.4)',
               transition: { type: 'spring', stiffness: 750, damping: 22 },
             }}
-            className="group relative cursor-pointer font-bold text-black uppercase tracking-wider text-[15px] sm:text-[16px] flex items-center justify-center gap-3 animate-neon-pulse select-none px-9 py-4 rounded-full"
+            className="group relative cursor-pointer font-bold text-black uppercase tracking-wider text-[14px] sm:text-[16px] flex items-center justify-center gap-3 animate-neon-pulse select-none px-8 sm:px-9 py-3.5 sm:py-4 rounded-full"
             style={{
               background: 'linear-gradient(90deg, #00D4FF 0%, #FF6B9D 100%)',
             }}
@@ -412,14 +452,13 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
 
       {/* 
         ====================================================================
-        OPTION 1: FLOATING 3D GLASS DEVICE / FUTURISTIC SCREEN SHOWCASE
+        UNIVERSAL 3D GLASS DEVICE SHOWCASE (PLAYS IN BOTH MOBILE & WEB VIEWS)
         ====================================================================
-        The video sits inside a dedicated floating 3D glass browser frame
-        with 100% clarity (no dark overlay on video), glowing neon border,
-        and natural scroll-scrubbing.
+        Video plays automatically in mobile and web views with full clarity,
+        scrubs forward/backward with scroll, and provides tap-to-play controls.
       */}
       <motion.div
-        initial={{ opacity: 0, y: 70, scale: 0.94 }}
+        initial={{ opacity: 0, y: 60, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 1.3, delay: 1.35, ease: [0.16, 1, 0.3, 1] }}
         style={{
@@ -434,7 +473,7 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
             scale: showcaseScale,
             y: showcaseY,
           }}
-          className="relative rounded-2xl sm:rounded-3xl p-1.5 sm:p-2.5 bg-gradient-to-b from-[#00D4FF]/40 via-white/10 to-[#FF6B9D]/30 shadow-[0_25px_70px_-15px_rgba(0,212,255,0.45),0_0_40px_rgba(255,107,157,0.25)] border border-white/15 backdrop-blur-xl group"
+          className="relative rounded-2xl sm:rounded-3xl p-1 sm:p-2.5 bg-gradient-to-b from-[#00D4FF]/40 via-white/10 to-[#FF6B9D]/30 shadow-[0_25px_70px_-15px_rgba(0,212,255,0.45),0_0_40px_rgba(255,107,157,0.25)] border border-white/15 backdrop-blur-xl group"
         >
           {/* Ambient backlight glow reflection behind the device */}
           <div className="absolute -inset-1 bg-gradient-to-r from-[#00D4FF]/30 to-[#FF6B9D]/30 rounded-3xl blur-xl opacity-60 group-hover:opacity-90 transition-opacity duration-700 -z-10" />
@@ -442,84 +481,122 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
           {/* Browser / Futuristic Mockup Header Chrome */}
           <div className="flex items-center justify-between px-3 sm:px-5 py-2.5 sm:py-3 rounded-t-xl sm:rounded-t-2xl bg-[#0C1222]/90 border-b border-white/10 select-none">
             {/* Window control dots */}
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-[#FF5F56] shadow-[0_0_8px_#FF5F56]/70 inline-block" />
-              <span className="w-3 h-3 rounded-full bg-[#FFBD2E] shadow-[0_0_8px_#FFBD2E]/70 inline-block" />
-              <span className="w-3 h-3 rounded-full bg-[#27C93F] shadow-[0_0_8px_#27C93F]/70 inline-block" />
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <span className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-[#FF5F56] shadow-[0_0_8px_#FF5F56]/70 inline-block" />
+              <span className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-[#FFBD2E] shadow-[0_0_8px_#FFBD2E]/70 inline-block" />
+              <span className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-[#27C93F] shadow-[0_0_8px_#27C93F]/70 inline-block" />
             </div>
 
             {/* Mockup Address Bar */}
-            <div className="flex items-center gap-2 px-3 sm:px-5 py-1 rounded-full bg-[#16213E]/80 border border-white/10 text-xs font-mono text-[#B0B0B0]">
+            <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-5 py-0.5 sm:py-1 rounded-full bg-[#16213E]/80 border border-white/10 text-[11px] sm:text-xs font-mono text-[#B0B0B0]">
               <span className="w-2 h-2 rounded-full bg-[#00D4FF] animate-pulse" />
               <span className="text-[#00D4FF] font-semibold">marketop.ai</span>
-              <span className="text-white/40">/neural-core</span>
+              <span className="text-white/40 hidden sm:inline">/neural-core</span>
             </div>
 
-            {/* Video Scrubbing Status Badge */}
-            <div className="flex items-center gap-2 text-xs font-mono">
-              <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#00D4FF]/10 text-[#00D4FF] border border-[#00D4FF]/30 text-[11px]">
+            {/* Video Playback & Scrubbing Interactive Controls */}
+            <div className="flex items-center gap-1.5 sm:gap-2 text-xs font-mono">
+              {/* Play / Pause toggle button */}
+              <button
+                type="button"
+                onClick={handleTogglePlay}
+                aria-label={isPlaying ? 'Pause video' : 'Play video'}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#00D4FF]/15 hover:bg-[#00D4FF]/25 border border-[#00D4FF]/40 text-[#00D4FF] transition-all cursor-pointer select-none"
+              >
+                {isPlaying ? (
+                  <>
+                    <Pause className="w-3 h-3 text-[#00D4FF]" />
+                    <span className="text-[10px] sm:text-[11px] font-bold">PLAYING</span>
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-3 h-3 text-[#00D4FF] fill-[#00D4FF]" />
+                    <span className="text-[10px] sm:text-[11px] font-bold">PAUSED</span>
+                  </>
+                )}
+              </button>
+
+              {/* Scrub indicator badge */}
+              <span className="hidden md:inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/5 text-[#B0B0B0] border border-white/10 text-[11px]">
                 <Film className="w-3 h-3 text-[#00D4FF]" />
-                {isMobile ? 'STATIC HD' : `SCRUB ${Math.round(scrubProgress * 100)}%`}
+                <span>SCRUB {Math.round(scrubProgress * 100)}%</span>
               </span>
-              <div className="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-white/70">
-                <Maximize2 className="w-3.5 h-3.5" />
-              </div>
+
+              {/* Restart button */}
+              <button
+                type="button"
+                onClick={handleRestartVideo}
+                aria-label="Restart video"
+                className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/70 hover:text-white transition-colors cursor-pointer"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+              </button>
             </div>
           </div>
 
           {/* 
-            Video Viewport Stage: 
-            Completely unobstructed, zero dark overlays on video, crystal clear 3D screen,
-            yellow clouds, and wireframe terrain.
+            Universal Video Viewport Stage: 
+            Plays natively on mobile AND web with zero dark overlays on the video.
+            Aspect ratio scales gracefully from mobile phone (16/10) to desktop widescreen (2.36/1).
           */}
-          <div className="relative w-full aspect-[2.36/1] sm:aspect-[2.2/1] rounded-b-xl sm:rounded-b-2xl overflow-hidden bg-black">
-            {!isMobile ? (
-              <div className="relative w-full h-full will-change-transform animate-subtle-breathe">
-                <video
-                  ref={videoRef}
-                  src={videoUrl}
-                  poster={posterUrl}
-                  muted
-                  playsInline
-                  preload="auto"
-                  className="w-full h-full object-cover object-center"
-                  style={{
-                    filter: 'contrast(1.05) saturate(1.08)',
-                  }}
-                />
-
-                {/* Instant poster preloader while video stream primes */}
-                {!videoLoaded && (
-                  <div
-                    className="absolute inset-0 bg-cover bg-center transition-opacity duration-500"
-                    style={{
-                      backgroundImage: `url('${posterUrl}')`,
-                      filter: 'contrast(1.05) saturate(1.08)',
-                    }}
-                  />
-                )}
-              </div>
-            ) : (
-              /* Mobile Graceful Static Fallback with Organic Breathing */
-              <div
-                className="w-full h-full bg-cover bg-center will-change-transform animate-subtle-breathe"
+          <div 
+            onClick={() => handleTogglePlay()}
+            className="relative w-full aspect-[16/10] sm:aspect-[2.1/1] lg:aspect-[2.36/1] min-h-[220px] sm:min-h-[300px] rounded-b-xl sm:rounded-b-2xl overflow-hidden bg-black cursor-pointer group"
+          >
+            {/* The HTML5 Video Element: Active on BOTH Mobile & Web */}
+            <div className="relative w-full h-full will-change-transform animate-subtle-breathe">
+              <video
+                ref={videoRef}
+                src={videoUrl}
+                poster={posterUrl}
+                muted
+                autoPlay
+                loop
+                playsInline
+                preload="auto"
+                className="w-full h-full object-cover object-center"
                 style={{
-                  backgroundImage: `url('${posterUrl}')`,
                   filter: 'contrast(1.05) saturate(1.08)',
                 }}
               />
-            )}
 
-            {/* Subtle glass reflection sheen across device screen */}
+              {/* Instant poster preloader while video stream primes */}
+              {!videoLoaded && (
+                <div
+                  className="absolute inset-0 bg-cover bg-center transition-opacity duration-500"
+                  style={{
+                    backgroundImage: `url('${posterUrl}')`,
+                    filter: 'contrast(1.05) saturate(1.08)',
+                  }}
+                />
+              )}
+            </div>
+
+            {/* Glass reflection sheen across device screen */}
             <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none" />
 
-            {/* Interactive Scroll Prompt Overlay Badge */}
+            {/* Floating Play Overlay Badge when paused */}
+            {!isPlaying && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px] transition-all">
+                <motion.div 
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="w-14 sm:w-16 h-14 sm:h-16 rounded-full bg-[#00D4FF]/90 text-black flex items-center justify-center shadow-[0_0_30px_#00D4FF] pl-1"
+                >
+                  <Play className="w-7 sm:w-8 h-7 sm:h-8 fill-black" />
+                </motion.div>
+              </div>
+            )}
+
+            {/* Interactive Live Status Overlay Badge */}
             <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 z-10 pointer-events-none">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0C1222]/85 backdrop-blur-md border border-[#00D4FF]/40 text-white text-xs font-mono shadow-[0_0_15px_rgba(0,0,0,0.8)]">
+              <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#0C1222]/85 backdrop-blur-md border border-[#00D4FF]/40 text-white text-[10px] sm:text-xs font-mono shadow-[0_0_15px_rgba(0,0,0,0.8)]">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                <span className="text-[11px] text-[#B0B0B0]">
-                  {isMobile ? 'Live Interactive 3D' : 'Scroll Page To Scrub'}
+                <span className="text-[#00D4FF] font-semibold">
+                  {isPlaying ? (isScrubbing ? 'Scrubbing...' : 'Live 4K Motion') : 'Paused'}
                 </span>
+                <span className="text-[#666] hidden sm:inline">•</span>
+                <span className="text-[#B0B0B0] hidden sm:inline">Scroll or Tap to Scrub</span>
               </div>
             </div>
           </div>
@@ -530,7 +607,7 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 1.85, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-8 flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-xs text-[#B0B0B0]"
+          className="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-4 sm:gap-8 lg:gap-10 text-xs text-[#B0B0B0]"
         >
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-[#00D4FF]" />

@@ -13,6 +13,7 @@ import {
   Cpu,
   Layers
 } from 'lucide-react';
+import { RollingNumber } from './RollingNumber';
 
 export const About: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'chart' | 'console' | 'vitals'>('chart');
@@ -117,7 +118,7 @@ export const About: React.FC = () => {
                       className="text-4xl sm:text-5xl font-black text-[#0C0C0C] tracking-tight"
                       style={{ fontWeight: 900 }}
                     >
-                      500+
+                      <RollingNumber value="500" suffix="+" duration={1.2} />
                     </span>
                     <span className="text-sm font-bold text-[#00D4FF] uppercase tracking-wide">
                       Verified
@@ -170,7 +171,7 @@ export const About: React.FC = () => {
                       className="text-4xl sm:text-5xl font-black text-[#0C0C0C] tracking-tight"
                       style={{ fontWeight: 900 }}
                     >
-                      98%
+                      <RollingNumber value="98" suffix="%" duration={1.2} />
                     </span>
                     <span className="text-sm font-bold text-[#FF6B9D] uppercase tracking-wide">
                       Year-over-Year
@@ -223,7 +224,7 @@ export const About: React.FC = () => {
                       className="text-4xl sm:text-5xl font-black text-[#0C0C0C] tracking-tight"
                       style={{ fontWeight: 900 }}
                     >
-                      3x
+                      <RollingNumber value="3" suffix="x" duration={1.1} />
                     </span>
                     <span className="text-sm font-bold text-[#00D4FF] uppercase tracking-wide">
                       Multiplier
@@ -332,19 +333,27 @@ export const About: React.FC = () => {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 my-4">
                   <div className="p-3 rounded-xl bg-[#0C0C0C]/80 border border-[#00D4FF]/30">
                     <div className="text-[10px] uppercase font-mono text-[#B0B0B0]">Crawl Latency</div>
-                    <div className="text-lg font-bold text-[#00D4FF] font-mono">24 ms</div>
+                    <div className="text-lg font-bold text-[#00D4FF] font-mono">
+                      <RollingNumber value="24" suffix=" ms" />
+                    </div>
                   </div>
                   <div className="p-3 rounded-xl bg-[#0C0C0C]/80 border border-[#00D4FF]/30">
                     <div className="text-[10px] uppercase font-mono text-[#B0B0B0]">Organic SERP #1</div>
-                    <div className="text-lg font-bold text-white font-mono">1,489</div>
+                    <div className="text-lg font-bold text-white font-mono">
+                      <RollingNumber value="1,489" />
+                    </div>
                   </div>
                   <div className="p-3 rounded-xl bg-[#0C0C0C]/80 border border-[#FF6B9D]/30">
                     <div className="text-[10px] uppercase font-mono text-[#B0B0B0]">CTR Spike</div>
-                    <div className="text-lg font-bold text-[#FF6B9D] font-mono">+18.4%</div>
+                    <div className="text-lg font-bold text-[#FF6B9D] font-mono">
+                      <RollingNumber value="+18.4%" />
+                    </div>
                   </div>
                   <div className="p-3 rounded-xl bg-[#0C0C0C]/80 border border-emerald-400/30">
                     <div className="text-[10px] uppercase font-mono text-[#B0B0B0]">Lighthouse</div>
-                    <div className="text-lg font-bold text-emerald-400 font-mono">100/100</div>
+                    <div className="text-lg font-bold text-emerald-400 font-mono">
+                      <RollingNumber value="100" />/<RollingNumber value="100" />
+                    </div>
                   </div>
                 </div>
 
@@ -357,7 +366,7 @@ export const About: React.FC = () => {
                         <span className="text-xs font-semibold text-white">Live Search Traffic Velocity</span>
                       </div>
                       <span className="text-[11px] font-mono text-[#00D4FF] bg-[#00D4FF]/10 px-2 py-0.5 rounded border border-[#00D4FF]/20">
-                        +342% vs Baseline
+                        <RollingNumber value="+342%" /> vs Baseline
                       </span>
                     </div>
 
@@ -430,10 +439,10 @@ export const About: React.FC = () => {
                 {activeTab === 'console' && (
                   <div className="p-4 rounded-xl bg-[#0C0C0C] border border-[#00D4FF]/30 font-mono text-xs text-[#00D4FF] space-y-1.5 h-44 overflow-y-auto">
                     <p className="text-emerald-400">&gt; npm run audit:deep-crawl --target=prod</p>
-                    <p className="text-[#B0B0B0]">[INFO] Parsing robots.txt and sitemap.xml ... OK (1,240 URLs)</p>
+                    <p className="text-[#B0B0B0]">[INFO] Parsing robots.txt and sitemap.xml ... OK (<RollingNumber value="1,240" /> URLs)</p>
                     <p className="text-[#00D4FF]">[SUCCESS] Canonical tags normalized. 0 duplicate clusters found.</p>
                     <p className="text-[#FF6B9D]">[AUTO-FIX] Schema.org ProfessionalService JSON-LD injected.</p>
-                    <p className="text-emerald-400">[RESULT] Average Organic SERP Velocity increased by +340%.</p>
+                    <p className="text-emerald-400">[RESULT] Average Organic SERP Velocity increased by <RollingNumber value="+340%" />.</p>
                     <p className="text-white animate-pulse">&gt; Ready for continuous deployment [LIVE STREAM]</p>
                   </div>
                 )}
@@ -444,7 +453,9 @@ export const About: React.FC = () => {
                     <div>
                       <div className="flex justify-between text-xs font-semibold mb-1">
                         <span className="text-white">Largest Contentful Paint (LCP)</span>
-                        <span className="text-emerald-400 font-mono">0.62s (Optimal)</span>
+                        <span className="text-emerald-400 font-mono">
+                          <RollingNumber value="0.62" suffix="s" /> (Optimal)
+                        </span>
                       </div>
                       <div className="w-full bg-[#1A1A1A] h-2 rounded-full overflow-hidden">
                         <div className="bg-emerald-400 h-full w-[94%]" />
@@ -453,7 +464,9 @@ export const About: React.FC = () => {
                     <div>
                       <div className="flex justify-between text-xs font-semibold mb-1">
                         <span className="text-white">Cumulative Layout Shift (CLS)</span>
-                        <span className="text-[#00D4FF] font-mono">0.001 (Zero Shift)</span>
+                        <span className="text-[#00D4FF] font-mono">
+                          <RollingNumber value="0.001" /> (Zero Shift)
+                        </span>
                       </div>
                       <div className="w-full bg-[#1A1A1A] h-2 rounded-full overflow-hidden">
                         <div className="bg-[#00D4FF] h-full w-[99%]" />
@@ -462,7 +475,9 @@ export const About: React.FC = () => {
                     <div>
                       <div className="flex justify-between text-xs font-semibold mb-1">
                         <span className="text-white">First Input Delay (FID)</span>
-                        <span className="text-emerald-400 font-mono">8ms (Sub-frame)</span>
+                        <span className="text-emerald-400 font-mono">
+                          <RollingNumber value="8" suffix="ms" /> (Sub-frame)
+                        </span>
                       </div>
                       <div className="w-full bg-[#1A1A1A] h-2 rounded-full overflow-hidden">
                         <div className="bg-gradient-to-r from-[#00D4FF] to-emerald-400 h-full w-[98%]" />
@@ -488,7 +503,7 @@ export const About: React.FC = () => {
                       </span>
                     </div>
                     <span className="text-[10px] font-mono text-[#00D4FF] bg-[#1A1A2E]/80 px-2 py-0.5 rounded border border-[#00D4FF]/30">
-                      99.9% Telemetry Fidelity
+                      <RollingNumber value="99.9" suffix="%" /> Telemetry Fidelity
                     </span>
                   </div>
                 </div>

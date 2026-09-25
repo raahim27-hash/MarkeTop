@@ -10,6 +10,7 @@ import {
   Share2, 
   Gauge
 } from 'lucide-react';
+import { RollingNumber } from './RollingNumber';
 
 interface ServicesProps {
   onSelectService: (serviceTitle: string) => void;
@@ -188,7 +189,7 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
                       {service.metric}
                     </span>
                     <span className="text-sm font-black text-[#00D4FF] font-mono group-hover:text-[#FF6B9D] transition-colors duration-300">
-                      {service.metricVal}
+                      <RollingNumber value={service.metricVal} duration={1.2} />
                     </span>
                   </div>
                 </div>

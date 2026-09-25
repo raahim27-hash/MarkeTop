@@ -13,6 +13,7 @@ import {
   Pause,
   RotateCcw
 } from 'lucide-react';
+import { RollingNumber } from './RollingNumber';
 
 interface HeroProps {
   onLaunchAnalytics: () => void;
@@ -332,7 +333,9 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
             Organic Traffic
           </div>
           <div className="text-sm font-bold text-white flex items-center gap-1.5">
-            <span className="text-[#00D4FF] font-black">+248.6%</span>
+            <span className="text-[#00D4FF] font-black">
+              <RollingNumber value="+248.6%" duration={1.2} />
+            </span>
             <span className="text-[10px] text-emerald-400">▲ MoM</span>
           </div>
         </div>
@@ -358,7 +361,9 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
             Rank #1 Keywords
           </div>
           <div className="text-sm font-bold text-white flex items-center gap-1">
-            <span className="text-[#FF6B9D] font-black">1,842</span>
+            <span className="text-[#FF6B9D] font-black">
+              <RollingNumber value="1,842" duration={1.2} />
+            </span>
             <span className="text-[10px] text-[#B0B0B0]">Indexed</span>
           </div>
         </div>
@@ -383,7 +388,7 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
           </span>
           <span className="font-semibold text-white">Data Pulse:</span>
           <span className="font-mono text-[#00D4FF] font-bold">
-            {pulseCount.toLocaleString()} evt/s
+            <RollingNumber value={pulseCount.toLocaleString()} suffix=" evt/s" duration={0.9} />
           </span>
           <span className="text-[#555] hidden sm:inline">|</span>
           <span className="text-[#B0B0B0] font-normal hidden sm:inline">Next-Gen Digital Intelligence</span>
@@ -621,7 +626,7 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchAnalytics }) => {
           <div className="w-1.5 h-1.5 rounded-full bg-[#00D4FF]/40 hidden sm:block" />
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>24-Hour Road Map Guarantee</span>
+            <span><RollingNumber value="24" suffix="-Hour" /> Road Map Guarantee</span>
           </div>
         </motion.div>
       </motion.div>

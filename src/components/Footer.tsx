@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { Mail, Phone, MapPin } from 'lucide-react';
+import { RollingNumber } from './RollingNumber';
 
 export const Footer: React.FC = () => {
   const footerRef = useRef<HTMLElement | null>(null);
@@ -189,7 +190,7 @@ export const Footer: React.FC = () => {
             className="text-[12px] font-mono tracking-wide"
             style={{ fontSize: '12px', color: '#666666' }}
           >
-            2025 MarkeTop. Built for speed.
+            <RollingNumber value="2025" /> MarkeTop. Built for speed.
           </p>
         </div>
       </motion.div>

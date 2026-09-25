@@ -10,6 +10,7 @@ import {
   CheckCircle,
   Globe
 } from 'lucide-react';
+import { RollingNumber } from './RollingNumber';
 
 interface CtaSectionProps {
   onStartAudit: (domain?: string) => void;
@@ -98,7 +99,7 @@ export const CtaSection: React.FC<CtaSectionProps> = ({ onStartAudit, onBookCall
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#16213E] border border-[#00D4FF]/40 text-[#00D4FF] text-xs font-semibold uppercase tracking-wider mb-6 shadow-[0_0_15px_rgba(0,212,255,0.3)]"
         >
           <Clock className="w-3.5 h-3.5 text-[#00D4FF] animate-spin" style={{ animationDuration: '6s' }} />
-          <span>Rapid 24-Hour Delivery Guaranteed</span>
+          <span>Rapid <RollingNumber value="24" suffix="-Hour" /> Delivery Guaranteed</span>
         </motion.div>
 
         {/* H2: Ready to 10X your digital presence? (white 44PX Neon Glow) */}
@@ -114,7 +115,7 @@ export const CtaSection: React.FC<CtaSectionProps> = ({ onStartAudit, onBookCall
             textShadow: '0 0 25px rgba(255, 255, 255, 0.6), 0 0 45px rgba(0, 212, 255, 0.4)',
           }}
         >
-          Ready to 10X your digital presence?
+          Ready to <RollingNumber value="10" suffix="X" /> your digital presence?
         </motion.h2>
 
         {/* P: Get your free SEO Audit + Growth Road map in 24 hours (#B0B0B0 20PX) */}
@@ -127,7 +128,7 @@ export const CtaSection: React.FC<CtaSectionProps> = ({ onStartAudit, onBookCall
           className="text-[#B0B0B0] text-[18px] sm:text-[20px] leading-relaxed mb-10 max-w-[620px]"
           style={{ fontSize: '20px', color: '#B0B0B0' }}
         >
-          Get your free SEO Audit + Growth Road map in 24 hours
+          Get your free SEO Audit + Growth Road map in <RollingNumber value="24" suffix=" hours" />
         </motion.p>
 
         {/* Quick Domain Input Box with Neon border */}

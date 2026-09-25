@@ -23,22 +23,31 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAudit }) => {
   const { scrollYProgress } = useScroll();
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScroll = window.scrollY || window.pageYOffset;
+          setScrolled(currentScroll > 20);
 
-      const sections = ['home', 'about', 'services', 'contact'];
-      const scrollPosition = window.scrollY + 200;
+          const sections = ['home', 'about', 'services', 'contact'];
+          const scrollPosition = currentScroll + 200;
 
-      for (const section of sections) {
-        const el = document.getElementById(section);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(section);
-            break;
+          for (const section of sections) {
+            const el = document.getElementById(section);
+            if (el) {
+              const top = el.offsetTop;
+              const height = el.offsetHeight;
+              if (scrollPosition >= top && scrollPosition < top + height) {
+                setActiveSection(section);
+                break;
+              }
+            }
           }
-        }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 

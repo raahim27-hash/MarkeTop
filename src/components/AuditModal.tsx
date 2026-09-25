@@ -14,6 +14,7 @@ import {
   Zap,
   TrendingUp
 } from 'lucide-react';
+import { RollingNumber } from './RollingNumber';
 import { AuditReport } from '../types';
 
 interface AuditModalProps {
@@ -255,7 +256,7 @@ export const AuditModal: React.FC<AuditModalProps> = ({
                       <div className="text-right">
                         <div className="text-xs text-[#B0B0B0] font-mono uppercase">Health Score</div>
                         <div className="text-2xl font-black text-[#00D4FF] font-mono">
-                          {report.overallScore}/100
+                          <RollingNumber value={report.overallScore} />/100
                         </div>
                       </div>
                     </div>
@@ -263,15 +264,21 @@ export const AuditModal: React.FC<AuditModalProps> = ({
                     <div className="grid grid-cols-3 gap-3">
                       <div className="p-3.5 rounded-xl bg-[#0C0C0C] border border-white/10 text-center">
                         <div className="text-xs text-[#B0B0B0]">SEO Health</div>
-                        <div className="text-xl font-black text-emerald-400 mt-1">{report.seoHealth}%</div>
+                        <div className="text-xl font-black text-emerald-400 mt-1">
+                          <RollingNumber value={report.seoHealth} suffix="%" />
+                        </div>
                       </div>
                       <div className="p-3.5 rounded-xl bg-[#0C0C0C] border border-white/10 text-center">
                         <div className="text-xs text-[#B0B0B0]">Speed Index</div>
-                        <div className="text-xl font-black text-[#00D4FF] mt-1">{report.pageSpeed}/100</div>
+                        <div className="text-xl font-black text-[#00D4FF] mt-1">
+                          <RollingNumber value={report.pageSpeed} />/100
+                        </div>
                       </div>
                       <div className="p-3.5 rounded-xl bg-[#0C0C0C] border border-white/10 text-center">
                         <div className="text-xs text-[#B0B0B0]">Backlinks</div>
-                        <div className="text-xl font-black text-[#FF6B9D] mt-1">{report.backlinks.toLocaleString()}</div>
+                        <div className="text-xl font-black text-[#FF6B9D] mt-1">
+                          <RollingNumber value={report.backlinks.toLocaleString()} />
+                        </div>
                       </div>
                     </div>
 
@@ -360,7 +367,7 @@ export const AuditModal: React.FC<AuditModalProps> = ({
                       }}
                     >
                       <Calendar className="w-4 h-4 text-white" />
-                      <span>Confirm 30-Min Strategy Call</span>
+                      <span>Confirm <RollingNumber value="30" suffix="-Min" /> Strategy Call</span>
                     </button>
                   </form>
                 ) : (
